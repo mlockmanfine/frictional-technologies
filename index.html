@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frictional Technologies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body,button{font-family:'Raleway',sans-serif}
+body{color:#1b1b1b;background: url('images/home.png') center/cover no-repeat fixed #fff;}
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+.back{position:fixed;top:14px;left:16px;z-index:5;font-weight:600;color:inherit;text-decoration:none;background:rgba(255,255,255,.75);padding:6px 12px;border-radius:20px}
+
+/* HOME */
+#home{position:relative;color:#000000;text-align:center;
+  background:linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0)),url('images/home.png') center/cover #234;}
+#home.active{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:4vh 6vw}
+.fade{opacity:0;transition:opacity 1.5s}
+.fade.show{opacity:1}
+#home h1{font-size:clamp(2rem,5.5vw,5.5rem);font-weight:600;line-height:1.1;margin:0 0 2vh}
+#home h1 span{display:block}
+#home .names{font-size:clamp(1rem,2vw,1.6rem);font-weight:300;margin:0 0 5vh}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:min(500px,100%)}
+.grid a{display:flex;align-items:center;justify-content:center;min-height:70px;padding:12px;color:#5b5aff;text-decoration:none;font-weight:600;
+  border:2px solid #7c0000;border-radius:10px;background:rgba(255,255,255,.1);backdrop-filter:blur(4px);transition:.2s}
+.grid a:hover{background:#fff;color:#111}
+@media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
+
+/* EXERCISE */
+#exercise{position:fixed;inset:0;z-index:10;overflow:hidden;touch-action:pan-y}
+#exercise.active{display:block}
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:10vh 10vw;
+  font-size:clamp(1.3rem,3vw,2.4rem);font-weight:400;line-height:1.4;transition:transform .5s ease;transform:translateX(100%)}
+.slide.current{transform:none}.slide.past{transform:translateX(-100%)}
+.slide .txt{opacity:0;transition:opacity 1.2s;max-width:800px}
+.slide.textin .txt{opacity:1}
+.next{position:absolute;bottom:5vh;left:50%;transform:translateX(-50%);width:64px;height:64px;border-radius:50%;border:2px solid currentColor;
+  background:transparent;color:inherit;font-size:30px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity 1s}
+.next.show{opacity:1;pointer-events:auto}
+
+/* INTERVIEWS */
+#interviews{background:#f3ece4;padding:90px 6vw 60px}
+.wrap{max-width:820px;margin:0 auto}
+.intro{text-align:center;margin-bottom:60px}
+.intro h2,.center h2{font-size:2.4rem;font-weight:800;margin:0 0 16px}
+.track{display:flex;align-items:center;gap:18px;justify-content:space-between;background:#fff;border-radius:12px;padding:18px 22px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.track .tt{flex:1;min-width:0}.track h3{margin:0 0 8px;font-size:1.05rem}.track audio{width:100%}
+.btn{display:inline-block;padding:10px 18px;border-radius:8px;background:#1b1b1b;color:#fff;text-decoration:none;font-weight:600;white-space:nowrap}
+@media(max-width:640px){.track{flex-direction:column;align-items:stretch}}
+
+/* ZINE */
+#zine{background:#e8b4a0;text-align:center;padding:90px 6vw 60px}
+#zine.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
+#zine img{max-width:min(420px,85vw);max-height:65vh;box-shadow:0 10px 30px rgba(0,0,0,.3);margin-bottom:30px;background:#fff}
+
+/* RESEARCH */
+#research .s1{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:90px 8vw;background:#dfe9f0}
+.center{max-width:760px;line-height:1.7;font-size:1.15rem}
+#research .s2{padding:80px 6vw;background:#fff}
+#research .s2 h2{text-align:center;font-size:2.4rem;font-weight:800;margin:0 0 50px}
+.person{display:grid;grid-template-columns:1fr 2fr;gap:36px;align-items:center;max-width:960px;margin:0 auto 50px}
+.person img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;background:#ccc}
+@media(max-width:640px){.person{grid-template-columns:1fr}}
+
+/* COMMENTS */
+#comments{background:#f4f4ef;padding:90px 6vw 60px}
+.update{border-left:4px solid #1b1b1b;padding:4px 18px;margin-bottom:24px}
+.update small{color:#666}
+
+/* Exercise image sizing */
+.slide{padding:5vh 0 !important}
+.slide .txt{height:100% !important;max-width:none !important;display:flex;align-items:center;justify-content:center}
+.slide .txt img{height:100% !important;width:auto !important;max-width:100% !important;object-fit:contain !important}
+
+/* Arrow: far right, clickable image */
+.next{left:auto !important;right:3vw !important;transform:none !important;width:auto !important;height:auto !important;border:none !important;border-radius:0 !important;background:none !important;padding:0}
+.next img{display:block;width:70px;height:auto}
+
+.corner{position:absolute;width:clamp(100px,18vw,260px);height:auto;pointer-events:none}
+.bl{bottom:3vh;left:3vw;transform:rotate(-46deg)}
+.tr{top:3vh;right:3vw;transform:rotate(136deg)}
+
+/* Home corner images */
+.corner{position:absolute;width:clamp(100px,18vw,260px);height:auto;pointer-events:none;z-index:1}
+.bl{bottom:0vh;left:0vw;transform:rotate(-46deg)}
+.tr{top:0vh;right:0vw;transform:rotate(140deg)}
+
+/* Moving dotted lines (one each way) */
+.trail{position:absolute;inset:4;width:100%;height:100%;pointer-events:none;z-index:0}
+.trail path{fill:none;stroke:#5b5aff;stroke-width:2;stroke-linecap:butt;stroke-dasharray:4 14;vector-effect:non-scaling-stroke;animation:flow .8s linear infinite}
+.trail .p2{animation-direction:reverse}
+@keyframes flow{to{stroke-dashoffset:-14}}
+
+/* keep the title, names and buttons above the lines */
+#home h1,#home .names,#home .grid{position:relative;z-index:1}
+
+/* smaller corner images on phones */
+@media(max-width:640px){.corner{width:80px}}
+
+/* Button layout: 2 on top row, 3 on bottom row */
+.grid{grid-template-columns:repeat(6,minmax(0,1fr))}
+.grid a{grid-column:span 2}
+.grid a:nth-child(-n+2){grid-column:span 3}
+@media(max-width:640px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .grid a,.grid a:nth-child(-n+2){grid-column:span 1}
+}
+</style>
+</head>
+<body>
+
+<!-- 1. HOME -->
+<section class="page" id="home">
+
+  <img class="corner bl" src="images/corner-left.png" alt="">
+<img class="corner tr" src="images/corner-right.png" alt="">
+<svg class="trail" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+  <path class="p1" d="M10,80 C30,30 70,70 88,12"/>
+  <path class="p2" d="M12,80 C40,85 60,15 88,12"/>
+</svg>
+
+  <h1 class="fade" id="t1"><span>Frictional Technologies:</span><span>Speculative Re-Design Through Critique and Desire</span></h1>
+  <p class="names fade" id="t2">brought to you by Micah Lockman-Fine and Tim Gorichanaz</p>
+ <nav class="grid fade" id="t3">
+  <a href="#/exercise">Online Exercise</a>
+  <a href="files/FrictionalTechnologies_Zine_MicahLockmane-Fine_TimGorichanaz.pdf" download>Download Zine</a>
+  <a href="#/interviews">Listen to Interviews</a>
+  <a href="#/research">Learn About the Research</a>
+  <a href="#/comments">Leave Comments and Updates</a>
+</nav>
+</section>
+
+<!-- 2. EXERCISE (30 slides, built by script from SLIDES below) -->
+<section class="page" id="exercise"></section>
+
+<!-- 3. INTERVIEWS -->
+<section class="page" id="interviews">
+  <a class="back" href="#/home">&larr; Home</a>
+  <div class="wrap">
+    <div class="intro"><h2>Audio Interviews</h2>
+      <p>Description of the interviews goes here.</p></div>
+    <div class="track"><div class="tt"><h3>Interview 1 title</h3><audio controls preload="none" src="audio/interview1.mp3"></audio></div><a class="btn" href="#">Link</a></div>
+    <div class="track"><div class="tt"><h3>Interview 2 title</h3><audio controls preload="none" src="audio/interview2.mp3"></audio></div><a class="btn" href="#">Link</a></div>
+    <div class="track"><div class="tt"><h3>Interview 3 title</h3><audio controls preload="none" src="audio/interview3.mp3"></audio></div><a class="btn" href="#">Link</a></div>
+    <div class="track"><div class="tt"><h3>Interview 4 title</h3><audio controls preload="none" src="audio/interview4.mp3"></audio></div><a class="btn" href="#">Link</a></div>
+    <div class="track"><div class="tt"><h3>Interview 5 title</h3><audio controls preload="none" src="audio/interview5.mp3"></audio></div><a class="btn" href="#">Link</a></div>
+  </div>
+</section>
+
+<!-- 4. ZINE -->
+<section class="page" id="zine">
+  <a class="back" href="#/home">&larr; Home</a>
+  <img src="images/zine-cover.jpg" alt="Zine first page">
+  <a class="btn" href="files/zine.pdf" download>Download the zine (PDF)</a>
+</section>
+
+<!-- 5. RESEARCH -->
+<section class="page" id="research">
+  <a class="back" href="#/home">&larr; Home</a>
+  <div class="s1"><div class="center"><h2>About the Research</h2><p>Research description goes here.</p></div></div>
+  <div class="s2">
+    <h2>About the researchers</h2>
+    <div class="person"><img src="images/micah.png" alt="Micah Lockman-Fine"><div><h3>Micah Lockman-Fine</h3><p>Micah is a design researcher exploring future imaginaries through speculative design and human-computer interaction. He creates workshops, exhibitions, performances, and academic research. He focuses on building critical capacity in users-visitors-audiences. He draws from experiential futuring, cyberfeminism, postcolonial and frictional computing, pluriversal design, and complexity theories. 
+</p><a href="micahlockmanfine.com" target="_blank" rel="noopener">micahlockmanfine.com</a></div></div>
+    <div class="person"><img src="images/tim.jpg" alt="Tim Gorichanaz"><div><h3>Tim Gorichanaz</h3><p>Bio goes here.</p></div></div>
+  </div>
+</section>
+
+<!-- 6. COMMENTS -->
+<section class="page" id="comments">
+  <a class="back" href="#/home">&larr; Home</a>
+  <div class="wrap">
+    <h2 style="font-size:2.4rem;font-weight:800">Updates</h2>
+    <div class="update"><small>Oct. 2026</small><h3>Welcome!</h3><p>Welcome to our Frictional Technologies exercise! This is version 1.0 of this work. We would love to hear from you about what works, what doesn't, and what you want to see more of. Please leave any comments below.</p></div>
+    <h2 style="font-size:2rem;font-weight:800;margin-top:60px">Comments</h2>
+    <div id="giscus-box"></div>
+  </div>
+</section>
+
+<script>
+/* ===== EDIT HERE: the 30 exercise pages (background color + text) ===== */
+const SLIDES = [
+  { bg:'#02AD88', img:'images/page1.png' },
+  { bg:'#029978', img:'images/page2.png' },
+  { bg:'#017D62', img:'images/page3.png' },
+  { bg:'#1D7562', img:'images/page4.png' },
+  { bg:'#428571', img:'images/page5.png' },
+  { bg:'#10614F', img:'images/page6.png' },
+  { bg:'#4D756D', img:'images/page7.png' },
+  { bg:'#38544E', img:'images/page8.png' },
+  { bg:'#366E61', img:'images/page9.png' },
+  { bg:'#507069', img:'images/page10.png' },
+  { bg:'#638758', img:'images/page11.png' },
+  { bg:'#857A5D', img:'images/page12.png' },
+  { bg:'#85726B', img:'images/page13.png' },
+  { bg:'#876C61', img:'images/page14.png' },
+  { bg:'#876254', img:'images/page15.png' },
+  { bg:'#875542', img:'images/page16.png' },
+  { bg:'#8A452B', img:'images/page17.png' },
+  { bg:'#873227', img:'images/page18.png' },
+  { bg:'#82281D', img:'images/page19.png' },
+  { bg:'#7D1E13', img:'images/page20.png' },
+  { bg:'#7D2307', img:'images/page21.png' },
+  { bg:'#8A2A0B', img:'images/page22.png' },
+  { bg:'#8C2300', img:'images/page23.png' },
+];
+/* Timings (ms) */
+const TEXT_DELAY=1000, ARROW_DELAY=2000;
+
+/* ===== Home fade-in sequence ===== */
+let homeTimers=[];
+function playHome(){
+  homeTimers.forEach(clearTimeout);homeTimers=[];
+  ['t1','t2','t3'].forEach(id=>document.getElementById(id).classList.remove('show'));
+  [1000,2000,3000].forEach((ms,i)=>homeTimers.push(setTimeout(()=>document.getElementById('t'+(i+1)).classList.add('show'),ms)));
+}
+
+/* ===== Exercise ===== */
+const ex=document.getElementById('exercise');
+let idx=0, exTimers=[], arrowReady=false;
+SLIDES.forEach((s,i)=>{
+  const d=document.createElement('div');d.className='slide';d.style.background=s.bg;d.style.color=s.color||'#111';
+d.innerHTML='<div class="txt"><img src="'+s.img+'" alt=""></div><button class="next" aria-label="Next"><img src="images/arrow.png" alt="Next"></button>';  d.querySelector('.next').onclick=()=>go(1);
+  ex.appendChild(d);
+});
+const slides=[...ex.querySelectorAll('.slide')];
+function showSlide(){
+  exTimers.forEach(clearTimeout);exTimers=[];arrowReady=false;
+  slides.forEach((s,i)=>{s.classList.toggle('current',i===idx);s.classList.toggle('past',i<idx);
+    s.classList.remove('textin');s.querySelector('.next').classList.remove('show');});
+  const cur=slides[idx];
+  exTimers.push(setTimeout(()=>cur.classList.add('textin'),TEXT_DELAY));
+  exTimers.push(setTimeout(()=>{cur.querySelector('.next').classList.add('show');arrowReady=true;},TEXT_DELAY+ARROW_DELAY));
+}
+function go(d){
+  if(d>0){ if(idx===SLIDES.length-1){location.hash='#/home';return;} idx++; }
+  else if(idx>0) idx--;
+  showSlide();
+}
+/* Swipe: left = next (only once the arrow has appeared), right = previous */
+let sx=null;
+ex.addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});
+ex.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx;sx=null;
+  if(dx<-50&&arrowReady)go(1);else if(dx>50)go(-1);});
+ex.addEventListener('mousedown',e=>{sx=e.clientX});
+ex.addEventListener('mouseup',e=>{if(sx===null)return;const dx=e.clientX-sx;sx=null;
+  if(dx<-50&&arrowReady)go(1);else if(dx>50)go(-1);});
+
+/* ===== Comments (giscus / GitHub Discussions) ===== */
+let giscusLoaded=false;
+function loadGiscus(){
+  if(giscusLoaded)return;giscusLoaded=true;
+  const s=document.createElement('script');
+  s.src='https://giscus.app/client.js';
+  s.setAttribute('data-repo','YOUR-USERNAME/YOUR-REPO');
+  s.setAttribute('data-repo-id','YOUR_REPO_ID');
+  s.setAttribute('data-category','General');
+  s.setAttribute('data-category-id','YOUR_CATEGORY_ID');
+  s.setAttribute('data-mapping','specific');
+  s.setAttribute('data-term','frictional-technologies-comments');
+  s.setAttribute('data-reactions-enabled','1');
+  s.setAttribute('data-theme','light');
+  s.crossOrigin='anonymous';s.async=true;
+  document.getElementById('giscus-box').appendChild(s);
+}
+
+/* ===== Router ===== */
+function route(){
+  const p=(location.hash.replace('#/','')||'home');
+  const id=document.getElementById(p)?p:'home';
+  document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id===id));
+  window.scrollTo(0,0);
+  if(id==='home')playHome();
+  else homeTimers.forEach(clearTimeout);
+  if(id==='exercise'){idx=0;showSlide();}else exTimers.forEach(clearTimeout);
+  if(id==='comments')loadGiscus();
+}
+addEventListener('hashchange',route);route();
+</script>
+</body>
+</html>
